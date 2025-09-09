@@ -42,6 +42,28 @@
       "frameworks": {
         "net8.0": {
           "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[9.0.9, )"
+            },
+            "OpenTelemetry": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "OpenTelemetry.Api": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "OpenTelemetry.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
