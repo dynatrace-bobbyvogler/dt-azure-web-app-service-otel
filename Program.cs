@@ -9,14 +9,6 @@ using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Configuration
-    .SetBasePath(Directory.GetCurrentDirectory())
-    .AddJsonFile("secrets.json", optional: true, reloadOnChange: true);
-
-var app = builder.Build();
-var API_URL = builder.Configuration["MySecrets:DT_API_URL"];
 
 
 namespace MyFirstAzureWebApp
@@ -24,9 +16,9 @@ namespace MyFirstAzureWebApp
     public class Program
     {
         // Dynatrace/OpenTelemetry configuration
-        // DT_API_URL will be set in Main method where API_URL is accessible
-        // TODO: Provide your SaaS/Managed URL here
-        // TODO: Provide the OpenTelemetry-scoped access token here
+        
+        private static string DT_API_URL = "XXXXX"; // TODO: Provide your SaaS/Managed URL here
+        private static string DT_API_TOKEN = "XXXXXX"; // TODO: Provide the OpenTelemetry-scoped access token here
 
         private const string activitySource = "Dynatrace.DotNetApp.Sample"; // TODO: Provide a descriptive name for your application here
         public static readonly ActivitySource MyActivitySource = new ActivitySource(activitySource);
@@ -34,7 +26,8 @@ namespace MyFirstAzureWebApp
 
         private static void initOpenTelemetry(IServiceCollection services)
         {
-            
+            Console.WriteLine("App is starting...");
+
             List<KeyValuePair<string, object>> dt_metadata = new List<KeyValuePair<string, object>>();
             foreach (string name in new string[] {"dt_metadata_e617c525669e072eebe3d0f08212e8f2.properties",
                                                 "/var/lib/dynatrace/enrichment/dt_metadata.properties",
@@ -98,6 +91,7 @@ namespace MyFirstAzureWebApp
                 .ConfigureResource(configureResource);
             // add-logging
         }
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -106,10 +100,6 @@ namespace MyFirstAzureWebApp
             builder.Services.AddRazorPages();
 
             var app = builder.Build();
-
-            // Assign DT_API_URL here where API_URL is accessible
-            var DT_API_URL = builder.Configuration["MySecrets:DT_API_URL"];
-            var DT_API_TOKEN = builder.Configuration["MySecrets:DT_API_TOKEN"]; // TODO: Provide the OpenTelemetry-scoped access token here
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -129,7 +119,6 @@ namespace MyFirstAzureWebApp
             app.MapRazorPages();
 
             app.Run();
-            }
         }
     }
-
+}
