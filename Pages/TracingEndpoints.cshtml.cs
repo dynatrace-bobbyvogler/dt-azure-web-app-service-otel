@@ -17,55 +17,87 @@ namespace MyFirstAzureWebApp.Pages
 
         public async Task<IActionResult> OnPostRequestA()
         {
-            using var activity = Program.MyActivitySource.StartActivity("Call to /RequestA", ActivityKind.Consumer);
+            using var activity = Program.MyActivitySource.StartActivity("RequestA", ActivityKind.Server);
             activity?.SetTag("http.method", "POST");
             activity?.SetTag("net.protocol.version", "1.1");
             activity?.SetTag("endpoint.name", "RequestA");
+            activity?.SetTag("service.name", "dotnet-quickstart");
             
             _logger.LogInformation("RequestA started");
-            // Simulate some logic for distributed tracing
-            // Call RequestB endpoint
-            using (var httpClient = new System.Net.Http.HttpClient())
-            {
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                var response = await httpClient.PostAsync($"{baseUrl}/TracingEndpoints?handler=RequestB", null);
-                var result = await response.Content.ReadAsStringAsync();
-                _logger.LogInformation("RequestA completed");
-                return new JsonResult(new { status = $"RequestA completed, {result}" });
-            }
+            
+            // Simulate some work
+            await Task.Delay(50);
+            
+            // Call RequestB directly (not via HTTP to maintain trace context)
+            var requestBResult = await CallRequestB();
+            
+            _logger.LogInformation("RequestA completed");
+            return new JsonResult(new { status = $"RequestA completed, {requestBResult}" });
         }
 
         public async Task<IActionResult> OnPostRequestB()
         {
-            using var activity = Program.MyActivitySource.StartActivity("Call to /RequestB", ActivityKind.Consumer);
+            using var activity = Program.MyActivitySource.StartActivity("RequestB", ActivityKind.Internal);
             activity?.SetTag("http.method", "POST");
             activity?.SetTag("net.protocol.version", "1.1");
             activity?.SetTag("endpoint.name", "RequestB");
+            activity?.SetTag("service.name", "dotnet-quickstart");
             
             _logger.LogInformation("RequestB started");
-            // Simulate some logic for distributed tracing
-            // Call RequestC endpoint
-            using (var httpClient = new System.Net.Http.HttpClient())
-            {
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
-                var response = await httpClient.PostAsync($"{baseUrl}/TracingEndpoints?handler=RequestC", null);
-                var result = await response.Content.ReadAsStringAsync();
-                _logger.LogInformation("RequestB completed");
-                return new JsonResult(new { status = $"RequestB completed, {result}" });
-            }
+            
+            // Simulate some work
+            await Task.Delay(30);
+            
+            // Call RequestC directly (not via HTTP to maintain trace context)
+            var requestCResult = await CallRequestC();
+            
+            _logger.LogInformation("RequestB completed");
+            return new JsonResult(new { status = $"RequestB completed, {requestCResult}" });
         }
 
         public IActionResult OnPostRequestC()
         {
-            using var activity = Program.MyActivitySource.StartActivity("Call to /RequestC", ActivityKind.Consumer);
+            using var activity = Program.MyActivitySource.StartActivity("RequestC", ActivityKind.Internal);
             activity?.SetTag("http.method", "POST");
             activity?.SetTag("net.protocol.version", "1.1");
             activity?.SetTag("endpoint.name", "RequestC");
+            activity?.SetTag("service.name", "dotnet-quickstart");
             
             _logger.LogInformation("RequestC started");
-            // Simulate some logic for distributed tracing
+            
+            // Simulate some work
+            System.Threading.Thread.Sleep(20);
+            
             _logger.LogInformation("RequestC completed");
             return new JsonResult(new { status = "RequestC completed" });
+        }
+
+        // Helper methods for direct calls (maintains trace context)
+        private async Task<string> CallRequestB()
+        {
+            using var activity = Program.MyActivitySource.StartActivity("CallRequestB", ActivityKind.Internal);
+            activity?.SetTag("operation", "internal_call");
+            activity?.SetTag("target", "RequestB");
+            
+            // Simulate some work
+            await Task.Delay(25);
+            
+            // Call RequestC
+            var requestCResult = await CallRequestC();
+            
+            return $"RequestB processed, {requestCResult}";
+        }
+
+        private async Task<string> CallRequestC()
+        {
+            using var activity = Program.MyActivitySource.StartActivity("CallRequestC", ActivityKind.Internal);
+            activity?.SetTag("operation", "internal_call");
+            activity?.SetTag("target", "RequestC");
+            
+            // Simulate some work
+            await Task.Delay(15);
+            
+            return "RequestC processed";
         }
 
         public IActionResult OnGetTestTrace()
