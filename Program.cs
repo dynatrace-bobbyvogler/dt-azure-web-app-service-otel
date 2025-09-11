@@ -15,18 +15,49 @@ namespace MyFirstAzureWebApp
 {
     public class Program
     {
-        // Dynatrace/OpenTelemetry configuration
-        
-        private static string DT_API_URL = "XXXXX"; // TODO: Provide your SaaS/Managed URL here
-        private static string DT_API_TOKEN = "XXXXXX"; // TODO: Provide the OpenTelemetry-scoped access token here
-
+        // Dynatrace /OpenTelemetry configuration
         private const string activitySource = "Dynatrace.DotNetApp.Sample"; // TODO: Provide a descriptive name for your application here
         public static readonly ActivitySource MyActivitySource = new ActivitySource(activitySource);
         private static ILoggerFactory loggerFactoryOT;
 
+        private static void ValidateEnvironmentVariables()
+        {
+            Console.WriteLine("=== Environment Variable Validation ===");
+            
+            var dtApiUrl = Environment.GetEnvironmentVariable("DT_API_URL");
+            var dtApiToken = Environment.GetEnvironmentVariable("DT_API_TOKEN");
+            
+            if (string.IsNullOrEmpty(dtApiUrl))
+            {
+                Console.WriteLine("❌ ERROR: DT_API_URL environment variable is not set!");
+                Console.WriteLine("   Set it using: export DT_API_URL='https://your-environment.live.dynatracelabs.com/api/v2/otlp'");
+                Environment.Exit(1);
+            }
+            else
+            {
+                Console.WriteLine($"✅ DT_API_URL: {dtApiUrl}");
+            }
+            
+            if (string.IsNullOrEmpty(dtApiToken))
+            {
+                Console.WriteLine("❌ ERROR: DT_API_TOKEN environment variable is not set!");
+                Console.WriteLine("   Set it using: export DT_API_TOKEN='your-token-here'");
+                Environment.Exit(1);
+            }
+            else
+            {
+                Console.WriteLine($"✅ DT_API_TOKEN: {dtApiToken.Substring(0, Math.Min(10, dtApiToken.Length))}...");
+            }
+            
+            Console.WriteLine("=== Environment Variables Valid ===");
+        }
+
         private static void initOpenTelemetry(IServiceCollection services)
         {
-            Console.WriteLine("App is starting...");
+            Console.WriteLine("=== OpenTelemetry Initialization Starting ===");
+            Console.WriteLine($"DT_API_URL: {Environment.GetEnvironmentVariable("DT_API_URL")}");
+            Console.WriteLine($"DT_API_TOKEN: {(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DT_API_TOKEN")) ? "NOT SET" : "SET")}");
+            Console.WriteLine($"ActivitySource: {MyActivitySource.Name}");
 
             List<KeyValuePair<string, object>> dt_metadata = new List<KeyValuePair<string, object>>();
             foreach (string name in new string[] {"dt_metadata_e617c525669e072eebe3d0f08212e8f2.properties",
@@ -53,7 +84,9 @@ namespace MyFirstAzureWebApp
                         .AddSource(MyActivitySource.Name)
                         .AddOtlpExporter(options => 
                         {
-                            options.Endpoint = new Uri(Environment.GetEnvironmentVariable("DT_API_URL")+ "/v1/traces");
+                            var endpoint = Environment.GetEnvironmentVariable("DT_API_URL") + "/v1/traces";
+                            Console.WriteLine($"Tracing Endpoint: {endpoint}");
+                            options.Endpoint = new Uri(endpoint);
                             options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
                             options.Headers = $"Authorization=Api-Token {Environment.GetEnvironmentVariable("DT_API_TOKEN")}";
                         });
@@ -89,12 +122,20 @@ namespace MyFirstAzureWebApp
                 .SetSampler(new AlwaysOnSampler())
                 .AddSource(MyActivitySource.Name)
                 .ConfigureResource(configureResource);
-            // add-logging
+            
+            Console.WriteLine("=== OpenTelemetry Initialization Complete ===");
+            Console.WriteLine("Tracing, Metrics, and Logging configured for Dynatrace");
         }
 
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            // Validate environment variables
+            ValidateEnvironmentVariables();
+
+            // Initialize OpenTelemetry
+            initOpenTelemetry(builder.Services);
 
             // Add services to the container.
             builder.Services.AddRazorPages();
