@@ -36,6 +36,7 @@ namespace MyFirstAzureWebApp.Pages
             activity?.SetTag("business.operation", "distributed_tracing_demo");
             activity?.SetTag("business.domain", "observability");
             activity?.SetTag("business.priority", "high");
+            activity?.SetTag("owner", "Bobby Vogler");
             
             // Performance and monitoring attributes
             var startTime = DateTime.UtcNow;
@@ -76,6 +77,7 @@ namespace MyFirstAzureWebApp.Pages
             activity?.SetTag("business.domain", "observability");
             activity?.SetTag("business.priority", "medium");
             activity?.SetTag("business.process_type", "intermediate");
+            activity?.SetTag("owner", "Bobby Vogler");
             
             // Performance attributes
             var startTime = DateTime.UtcNow;
@@ -121,6 +123,7 @@ namespace MyFirstAzureWebApp.Pages
             activity?.SetTag("business.domain", "observability");
             activity?.SetTag("business.priority", "low");
             activity?.SetTag("business.process_type", "terminal");
+            activity?.SetTag("owner", "Bobby Vogler");
             
             // Performance attributes
             var startTime = DateTime.UtcNow;
