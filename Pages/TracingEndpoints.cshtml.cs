@@ -18,10 +18,30 @@ namespace MyFirstAzureWebApp.Pages
         public async Task<IActionResult> OnPostRequestA()
         {
             using var activity = Program.MyActivitySource.StartActivity("RequestA", ActivityKind.Server);
+            
+            // Standard HTTP attributes
             activity?.SetTag("http.method", "POST");
-            activity?.SetTag("net.protocol.version", "1.1");
-            activity?.SetTag("endpoint.name", "RequestA");
+            activity?.SetTag("http.scheme", Request.Scheme);
+            activity?.SetTag("http.host", Request.Host.ToString());
+            activity?.SetTag("http.route", "/TracingEndpoints?handler=RequestA");
+            activity?.SetTag("http.user_agent", Request.Headers["User-Agent"].ToString());
+            
+            // Service and endpoint attributes
             activity?.SetTag("service.name", "dotnet-quickstart");
+            activity?.SetTag("service.version", "1.0.0");
+            activity?.SetTag("endpoint.name", "RequestA");
+            activity?.SetTag("endpoint.type", "entry_point");
+            
+            // Custom business attributes
+            activity?.SetTag("business.operation", "distributed_tracing_demo");
+            activity?.SetTag("business.domain", "observability");
+            activity?.SetTag("business.priority", "high");
+            
+            // Performance and monitoring attributes
+            var startTime = DateTime.UtcNow;
+            activity?.SetTag("performance.expected_duration_ms", 200);
+            activity?.SetTag("monitoring.enabled", true);
+            activity?.SetTag("debug.trace_id", activity?.TraceId.ToString());
             
             _logger.LogInformation("RequestA started");
             
@@ -31,6 +51,12 @@ namespace MyFirstAzureWebApp.Pages
             // Call RequestB directly (not via HTTP to maintain trace context)
             var requestBResult = await CallRequestB();
             
+            // Add completion attributes
+            var duration = DateTime.UtcNow - startTime;
+            activity?.SetTag("performance.actual_duration_ms", duration.TotalMilliseconds);
+            activity?.SetTag("business.result", "success");
+            activity?.SetTag("business.processed_items", 1);
+            
             _logger.LogInformation("RequestA completed");
             return new JsonResult(new { status = $"RequestA completed, {requestBResult}" });
         }
@@ -38,10 +64,28 @@ namespace MyFirstAzureWebApp.Pages
         public async Task<IActionResult> OnPostRequestB()
         {
             using var activity = Program.MyActivitySource.StartActivity("RequestB", ActivityKind.Internal);
-            activity?.SetTag("http.method", "POST");
-            activity?.SetTag("net.protocol.version", "1.1");
-            activity?.SetTag("endpoint.name", "RequestB");
+            
+            // Service and endpoint attributes
             activity?.SetTag("service.name", "dotnet-quickstart");
+            activity?.SetTag("service.version", "1.0.0");
+            activity?.SetTag("endpoint.name", "RequestB");
+            activity?.SetTag("endpoint.type", "internal_processing");
+            
+            // Custom business attributes
+            activity?.SetTag("business.operation", "data_processing");
+            activity?.SetTag("business.domain", "observability");
+            activity?.SetTag("business.priority", "medium");
+            activity?.SetTag("business.process_type", "intermediate");
+            
+            // Performance attributes
+            var startTime = DateTime.UtcNow;
+            activity?.SetTag("performance.expected_duration_ms", 100);
+            activity?.SetTag("performance.operation_type", "cpu_intensive");
+            
+            // Data processing attributes
+            activity?.SetTag("data.input_size", "medium");
+            activity?.SetTag("data.processing_type", "sequential");
+            activity?.SetTag("data.validation_required", true);
             
             _logger.LogInformation("RequestB started");
             
@@ -51,6 +95,13 @@ namespace MyFirstAzureWebApp.Pages
             // Call RequestC directly (not via HTTP to maintain trace context)
             var requestCResult = await CallRequestC();
             
+            // Add completion attributes
+            var duration = DateTime.UtcNow - startTime;
+            activity?.SetTag("performance.actual_duration_ms", duration.TotalMilliseconds);
+            activity?.SetTag("business.result", "success");
+            activity?.SetTag("data.output_size", "small");
+            activity?.SetTag("data.validation_passed", true);
+            
             _logger.LogInformation("RequestB completed");
             return new JsonResult(new { status = $"RequestB completed, {requestCResult}" });
         }
@@ -58,15 +109,48 @@ namespace MyFirstAzureWebApp.Pages
         public IActionResult OnPostRequestC()
         {
             using var activity = Program.MyActivitySource.StartActivity("RequestC", ActivityKind.Internal);
-            activity?.SetTag("http.method", "POST");
-            activity?.SetTag("net.protocol.version", "1.1");
-            activity?.SetTag("endpoint.name", "RequestC");
+            
+            // Service and endpoint attributes
             activity?.SetTag("service.name", "dotnet-quickstart");
+            activity?.SetTag("service.version", "1.0.0");
+            activity?.SetTag("endpoint.name", "RequestC");
+            activity?.SetTag("endpoint.type", "final_processing");
+            
+            // Custom business attributes
+            activity?.SetTag("business.operation", "final_validation");
+            activity?.SetTag("business.domain", "observability");
+            activity?.SetTag("business.priority", "low");
+            activity?.SetTag("business.process_type", "terminal");
+            
+            // Performance attributes
+            var startTime = DateTime.UtcNow;
+            activity?.SetTag("performance.expected_duration_ms", 50);
+            activity?.SetTag("performance.operation_type", "memory_intensive");
+            
+            // Data processing attributes
+            activity?.SetTag("data.input_size", "small");
+            activity?.SetTag("data.processing_type", "validation");
+            activity?.SetTag("data.validation_required", false);
+            activity?.SetTag("data.cleanup_required", true);
+            
+            // System attributes
+            activity?.SetTag("system.component", "validator");
+            activity?.SetTag("system.resource_type", "memory");
+            activity?.SetTag("system.criticality", "low");
             
             _logger.LogInformation("RequestC started");
             
             // Simulate some work
             System.Threading.Thread.Sleep(20);
+            
+            // Add completion attributes
+            var duration = DateTime.UtcNow - startTime;
+            activity?.SetTag("performance.actual_duration_ms", duration.TotalMilliseconds);
+            activity?.SetTag("business.result", "success");
+            activity?.SetTag("data.output_size", "minimal");
+            activity?.SetTag("data.validation_passed", true);
+            activity?.SetTag("data.cleanup_completed", true);
+            activity?.SetTag("system.status", "healthy");
             
             _logger.LogInformation("RequestC completed");
             return new JsonResult(new { status = "RequestC completed" });
@@ -76,8 +160,20 @@ namespace MyFirstAzureWebApp.Pages
         private async Task<string> CallRequestB()
         {
             using var activity = Program.MyActivitySource.StartActivity("CallRequestB", ActivityKind.Internal);
-            activity?.SetTag("operation", "internal_call");
-            activity?.SetTag("target", "RequestB");
+            
+            // Internal call attributes
+            activity?.SetTag("operation.type", "internal_call");
+            activity?.SetTag("operation.target", "RequestB");
+            activity?.SetTag("operation.purpose", "orchestration");
+            
+            // Performance attributes
+            var startTime = DateTime.UtcNow;
+            activity?.SetTag("performance.expected_duration_ms", 50);
+            
+            // Call context attributes
+            activity?.SetTag("call.source", "RequestA");
+            activity?.SetTag("call.method", "direct_invocation");
+            activity?.SetTag("call.async", true);
             
             // Simulate some work
             await Task.Delay(25);
@@ -85,17 +181,42 @@ namespace MyFirstAzureWebApp.Pages
             // Call RequestC
             var requestCResult = await CallRequestC();
             
+            // Add completion attributes
+            var duration = DateTime.UtcNow - startTime;
+            activity?.SetTag("performance.actual_duration_ms", duration.TotalMilliseconds);
+            activity?.SetTag("call.result", "success");
+            activity?.SetTag("call.cascading_calls", 1);
+            
             return $"RequestB processed, {requestCResult}";
         }
 
         private async Task<string> CallRequestC()
         {
             using var activity = Program.MyActivitySource.StartActivity("CallRequestC", ActivityKind.Internal);
-            activity?.SetTag("operation", "internal_call");
-            activity?.SetTag("target", "RequestC");
+            
+            // Internal call attributes
+            activity?.SetTag("operation.type", "internal_call");
+            activity?.SetTag("operation.target", "RequestC");
+            activity?.SetTag("operation.purpose", "final_processing");
+            
+            // Performance attributes
+            var startTime = DateTime.UtcNow;
+            activity?.SetTag("performance.expected_duration_ms", 30);
+            
+            // Call context attributes
+            activity?.SetTag("call.source", "CallRequestB");
+            activity?.SetTag("call.method", "direct_invocation");
+            activity?.SetTag("call.async", true);
+            activity?.SetTag("call.chain_position", "terminal");
             
             // Simulate some work
             await Task.Delay(15);
+            
+            // Add completion attributes
+            var duration = DateTime.UtcNow - startTime;
+            activity?.SetTag("performance.actual_duration_ms", duration.TotalMilliseconds);
+            activity?.SetTag("call.result", "success");
+            activity?.SetTag("call.cascading_calls", 0);
             
             return "RequestC processed";
         }
