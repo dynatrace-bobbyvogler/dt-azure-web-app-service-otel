@@ -19,37 +19,6 @@ namespace MyFirstAzureWebApp
         private const string activitySource = "Dynatrace.DotNetApp.Sample"; // TODO: Provide a descriptive name for your application here
         public static readonly ActivitySource MyActivitySource = new ActivitySource(activitySource);
         private static ILoggerFactory loggerFactoryOT;
-        
-
-        private static void ValidateEnvironmentVariables(string dtApiUrl, string dtApiToken)
-        {
-            Console.WriteLine("=== Environment Variable Validation ===");
-            
-
-            if (string.IsNullOrEmpty(dtApiUrl))
-            {
-                Console.WriteLine("❌ ERROR: DT_API_URL environment variable is not set!");
-                Console.WriteLine("   Set it using: export DT_API_URL='https://your-environment.live.dynatracelabs.com/api/v2/otlp'");
-                Environment.Exit(1);
-            }
-            else
-            {
-                Console.WriteLine($"✅ DT_API_URL: {dtApiUrl}");
-            }
-
-            if (string.IsNullOrEmpty(dtApiToken))
-            {
-                Console.WriteLine("❌ ERROR: DT_API_TOKEN environment variable is not set!");
-                Console.WriteLine("   Set it using: export DT_API_TOKEN='your-token-here'");
-                Environment.Exit(1);
-            }
-            else
-            {
-                Console.WriteLine($"✅ DT_API_TOKEN: {dtApiToken.Substring(0, Math.Min(10, dtApiToken.Length))}...");
-            }
-
-            Console.WriteLine("=== Environment Variables Valid ===");
-        }
 
         private static void initOpenTelemetry(IServiceCollection services)
         {
@@ -143,10 +112,8 @@ namespace MyFirstAzureWebApp
 
                 var app = builder.Build();
 
-                var dtApiUrl = builder.Configuration["DT_API_URL"];
-                var dtApiToken = builder.Configuration["DT_API_TOKEN"];
                 // Validate environment variables
-                ValidateEnvironmentVariables(dtApiUrl, dtApiToken);
+    
 
                 // Configure the HTTP request pipeline.
                 if (!app.Environment.IsDevelopment())
