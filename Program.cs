@@ -19,14 +19,13 @@ namespace MyFirstAzureWebApp
         private const string activitySource = "Dynatrace.DotNetApp.Sample"; // TODO: Provide a descriptive name for your application here
         public static readonly ActivitySource MyActivitySource = new ActivitySource(activitySource);
         private static ILoggerFactory loggerFactoryOT;
+        
 
-        private static void ValidateEnvironmentVariables()
+        private static void ValidateEnvironmentVariables(string dtApiUrl, string dtApiToken)
         {
             Console.WriteLine("=== Environment Variable Validation ===");
             
-            var dtApiUrl = Environment.GetEnvironmentVariable("DT_API_URL");
-            var dtApiToken = Environment.GetEnvironmentVariable("DT_API_TOKEN");
-            
+
             if (string.IsNullOrEmpty(dtApiUrl))
             {
                 Console.WriteLine("❌ ERROR: DT_API_URL environment variable is not set!");
@@ -37,7 +36,7 @@ namespace MyFirstAzureWebApp
             {
                 Console.WriteLine($"✅ DT_API_URL: {dtApiUrl}");
             }
-            
+
             if (string.IsNullOrEmpty(dtApiToken))
             {
                 Console.WriteLine("❌ ERROR: DT_API_TOKEN environment variable is not set!");
@@ -48,7 +47,7 @@ namespace MyFirstAzureWebApp
             {
                 Console.WriteLine($"✅ DT_API_TOKEN: {dtApiToken.Substring(0, Math.Min(10, dtApiToken.Length))}...");
             }
-            
+
             Console.WriteLine("=== Environment Variables Valid ===");
         }
 
@@ -129,37 +128,51 @@ namespace MyFirstAzureWebApp
 
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Validate environment variables
-            ValidateEnvironmentVariables();
-
-            // Initialize OpenTelemetry
-            initOpenTelemetry(builder.Services);
-
-            // Add services to the container.
-            builder.Services.AddRazorPages();
-
-            var app = builder.Build();
-
-            // Configure the HTTP request pipeline.
-            if (!app.Environment.IsDevelopment())
+            try
             {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                var builder = WebApplication.CreateBuilder(args);
+
+                // Validate environment variables
+                //ValidateEnvironmentVariables();
+
+                // Initialize OpenTelemetry
+                initOpenTelemetry(builder.Services);
+
+                // Add services to the container.
+                builder.Services.AddRazorPages();
+
+                var app = builder.Build();
+
+                var dtApiUrl = builder.Configuration["DT_API_URL"];
+                var dtApiToken = builder.Configuration["DT_API_TOKEN"];
+                // Validate environment variables
+                ValidateEnvironmentVariables(dtApiUrl, dtApiToken);
+
+                // Configure the HTTP request pipeline.
+                if (!app.Environment.IsDevelopment())
+                {
+                    app.UseExceptionHandler("/Error");
+                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                    app.UseHsts();
+                }
+
+                app.UseHttpsRedirection();
+                app.UseStaticFiles();
+
+                app.UseRouting();
+
+                app.UseAuthorization();
+
+                app.MapRazorPages();
+
+                app.Run();
             }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.MapRazorPages();
-
-            app.Run();
-        }
+            catch (Exception ex)
+            {
+                // This will help identify startup issues
+                Console.WriteLine($"Application failed to start: {ex}");
+                throw;
+            }
+            }
     }
 }

@@ -1057,19 +1057,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/bobby/.nuget/packages/": {}
+    "/Users/bobby.vogler/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/bobby/Developer/code/workInProgress/azureApp/dt-azure-web-app-service-otel/MyFirstAzureWebApp.csproj",
+      "projectUniqueName": "/Users/bobby.vogler/Library/CloudStorage/OneDrive-Dynatrace/Documents/SE/Code/Code/azureAppServiceExample/azureAppServiceLab/MyFirstAzureWebApp.csproj",
       "projectName": "MyFirstAzureWebApp",
-      "projectPath": "/Users/bobby/Developer/code/workInProgress/azureApp/dt-azure-web-app-service-otel/MyFirstAzureWebApp.csproj",
-      "packagesPath": "/Users/bobby/.nuget/packages/",
-      "outputPath": "/Users/bobby/Developer/code/workInProgress/azureApp/dt-azure-web-app-service-otel/obj/",
+      "projectPath": "/Users/bobby.vogler/Library/CloudStorage/OneDrive-Dynatrace/Documents/SE/Code/Code/azureAppServiceExample/azureAppServiceLab/MyFirstAzureWebApp.csproj",
+      "packagesPath": "/Users/bobby.vogler/.nuget/packages/",
+      "outputPath": "/Users/bobby.vogler/Library/CloudStorage/OneDrive-Dynatrace/Documents/SE/Code/Code/azureAppServiceExample/azureAppServiceLab/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/bobby/.nuget/NuGet/NuGet.Config"
+        "/Users/bobby.vogler/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -1138,7 +1138,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/Users/bobby/.dotnet/sdk/8.0.414/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.413/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
