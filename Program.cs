@@ -23,8 +23,8 @@ namespace MyFirstAzureWebApp
         private static void initOpenTelemetry(IServiceCollection services)
         {
             Console.WriteLine("=== OpenTelemetry Initialization Starting ===");
-            Console.WriteLine($"DT_API_URL: {Environment.GetEnvironmentVariable("DT_API_URL")}");
-            Console.WriteLine($"DT_API_TOKEN: {(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DT_API_TOKEN")) ? "NOT SET" : "SET")}");
+            //Console.WriteLine($"DT_API_URL: {Environment.GetEnvironmentVariable("DT_API_URL")}");
+            //Console.WriteLine($"DT_API_TOKEN: {(string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DT_API_TOKEN")) ? "NOT SET" : "SET")}");
             Console.WriteLine($"ActivitySource: {MyActivitySource.Name}");
 
             List<KeyValuePair<string, object>> dt_metadata = new List<KeyValuePair<string, object>>();
@@ -52,11 +52,11 @@ namespace MyFirstAzureWebApp
                         .AddSource(MyActivitySource.Name)
                         .AddOtlpExporter(options => 
                         {
-                            var endpoint = Environment.GetEnvironmentVariable("DT_API_URL") + "/v1/traces";
-                            Console.WriteLine($"Tracing Endpoint: {endpoint}");
-                            options.Endpoint = new Uri(endpoint);
+                            //var endpoint = Environment.GetEnvironmentVariable("DT_API_URL") + "/v1/traces";
+                            //Console.WriteLine($"Tracing Endpoint: {endpoint}");
+                            //options.Endpoint = new Uri(endpoint);
                             options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
-                            options.Headers = $"Authorization=Api-Token {Environment.GetEnvironmentVariable("DT_API_TOKEN")}";
+                           // options.Headers = $"Authorization=Api-Token {Environment.GetEnvironmentVariable("DT_API_TOKEN")}";
                         });
                 })
                 .WithMetrics(builder => {
@@ -64,8 +64,8 @@ namespace MyFirstAzureWebApp
                         .AddMeter("my-meter")
                         .AddOtlpExporter((OtlpExporterOptions exporterOptions, MetricReaderOptions readerOptions) =>
                         {
-                            exporterOptions.Endpoint = new Uri(Environment.GetEnvironmentVariable("DT_API_URL")+ "/v1/metrics");
-                            exporterOptions.Headers = $"Authorization=Api-Token {Environment.GetEnvironmentVariable("DT_API_TOKEN")}";
+                            //exporterOptions.Endpoint = new Uri(Environment.GetEnvironmentVariable("DT_API_URL")+ "/v1/metrics");
+                            //exporterOptions.Headers = $"Authorization=Api-Token {Environment.GetEnvironmentVariable("DT_API_TOKEN")}";
                             exporterOptions.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
                             readerOptions.TemporalityPreference = MetricReaderTemporalityPreference.Delta;
                         });
@@ -78,8 +78,8 @@ namespace MyFirstAzureWebApp
                 builder
                     .AddOpenTelemetry(options => {
                         options.SetResourceBuilder(resourceBuilder).AddOtlpExporter(options => {
-                            options.Endpoint = new Uri(Environment.GetEnvironmentVariable("DT_API_URL")+ "/v1/logs");
-                            options.Headers = $"Authorization=Api-Token {Environment.GetEnvironmentVariable("DT_API_TOKEN")}";
+                            //options.Endpoint = new Uri(Environment.GetEnvironmentVariable("DT_API_URL")+ "/v1/logs");
+                           // options.Headers = $"Authorization=Api-Token {Environment.GetEnvironmentVariable("DT_API_TOKEN")}";
                             options.ExportProcessorType = OpenTelemetry.ExportProcessorType.Batch;
                             options.Protocol = OtlpExportProtocol.HttpProtobuf;
                         });

@@ -126,7 +126,7 @@ namespace MyFirstAzureWebApp.Pages
                 timestamp = DateTime.UtcNow
             });
         }
-
+/*
         public async Task<IActionResult> OnGetTestConnection()
         {
             Console.WriteLine("=== Manual Connection Test ===");
@@ -173,6 +173,7 @@ namespace MyFirstAzureWebApp.Pages
                     error = ex.Message 
                 });
             }
-        }
+            
+        }*/
     }
 }
