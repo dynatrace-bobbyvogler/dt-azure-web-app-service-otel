@@ -1,6 +1,7 @@
 # Build outputs
 bin/
 obj/
+out/
 
 # Cache files
 *.cache
@@ -9,9 +10,13 @@ obj/
 # User-specific files
 *.user
 *.suo
+*.userosscache
+*.sln.docstates
 
 # Visual Studio
 .vs/
+*.swp
+*.swo
 
 # JetBrains
 .idea/
@@ -19,3 +24,18 @@ obj/
 # OS
 .DS_Store
 Thumbs.db
+Desktop.ini
+
+# .NET specific
+*.dll
+*.exe
+*.pdb
+*.log
+*.tmp
+*.temp
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
