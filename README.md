@@ -26,5 +26,11 @@ Outcome:
 
 Native Dynatrace Azure Web App Service OneAgent Extension:
 
+Inline-style: 
+![alt text](https://github.com/dynatrace-bobbyvogler/dt-azure-web-app-service-otel/blob/main/images/oneagent.png?raw=true "OneAgent Extension")
+
 OpenTelemetry (Otel) via OTLP:
+![alt text](https://github.com/dynatrace-bobbyvogler/dt-azure-web-app-service-otel/blob/main/images/otel.png?raw=true "Otel")
+
 Native Dynatrace Azure Web App Service OneAgent Extension + OpenTelemetry: 
+![alt text](https://github.com/dynatrace-bobbyvogler/dt-azure-web-app-service-otel/blob/main/images/oneagent-otel.png?raw=true "OneAgent Extension + Otel")
