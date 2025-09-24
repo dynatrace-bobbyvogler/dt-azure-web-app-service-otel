@@ -23,10 +23,12 @@ Basic .NET application to be deployed to an App Service, monitored with the Dyna
 ------
 	
 
-###Pre-requisites: 
+### Pre-requisites: 
 
 Dynatrace SaaS tenant.
+
 Dynatrace API token for Otel ingest.
+
 Azure environment access.
 
 Outcome:
