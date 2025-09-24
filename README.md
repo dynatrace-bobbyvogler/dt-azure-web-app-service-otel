@@ -6,17 +6,17 @@ In this tutorial we will be exploring how Dynatrace is able to monitor and inges
 	• Native Dynatrace Azure Web App Service OneAgent Extension + OpenTelemetry 
 
 # This repo includes three branches for each of the above deployment options. 
-Main:
+# Main:
 
-	• Basic .NET application to be deployed to an App Service and monitored with the Dynatrace OneAgent on Azure App Service.
+Basic .NET application to be deployed to an App Service and monitored with the Dynatrace OneAgent on Azure App Service.
 	
-Otel:
+# Otel:
 
-	• Basic .NET application to be deployed or ran locally to colelct Otel traces and metadata and send via OTLP to the Dynatrace SaaS endpoint. 
+Basic .NET application to be deployed or ran locally to colelct Otel traces and metadata and send via OTLP to the Dynatrace SaaS endpoint. 
 	
-Otel-oneagent:
+# Otel-oneagent:
 
-	• Basic .NET application to be deployed to an App Service, monitored with the Dynatrace OneAgent on Azure App Service and trace generation through Otel.
+Basic .NET application to be deployed to an App Service, monitored with the Dynatrace OneAgent on Azure App Service and trace generation through Otel.
 	
  
 
