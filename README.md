@@ -23,19 +23,18 @@ Basic .NET application to be deployed to an App Service, monitored with the Dyna
 ------
 	
 
-### Pre-requisites: 
+## Pre-requisites: 
 
-Dynatrace SaaS tenant.
+* Dynatrace SaaS tenant.
 
-Dynatrace API token for Otel ingest.
+* Dynatrace API token for Otel ingest.
 
-Azure environment access.
+* Azure environment access.
 
-Outcome:
+## Outcome:
 
 Native Dynatrace Azure Web App Service OneAgent Extension:
 
-Inline-style: 
 ![alt text](https://github.com/dynatrace-bobbyvogler/dt-azure-web-app-service-otel/blob/main/images/oneagent.png?raw=true "OneAgent Extension")
 
 OpenTelemetry (Otel) via OTLP:
