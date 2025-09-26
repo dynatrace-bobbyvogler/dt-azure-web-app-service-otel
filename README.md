@@ -80,7 +80,4 @@ By running the API call below, we are able to grab an ActiveGate service that is
 For example, mine was:
 ```
 https://xx-xx-xxxxxxx-xx-cluster-acceptancee2e.sprint.dynatracelabs.com/e/<tenantId>/api
-
-
 ```
-<img width="468" height="652" alt="image" src="https://github.com/user-attachments/assets/9147d62a-0e21-407b-89ee-2bdf11074ece" />
