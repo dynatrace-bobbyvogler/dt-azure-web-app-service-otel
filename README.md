@@ -48,7 +48,9 @@ Basic .NET application to be deployed to an App Service, monitored with the Dyna
 
 * To deploy the OneAgent extension, follow this documentation: https://docs.dynatrace.com/docs/shortlink/azure-appservice-oneagent#portal
 
-* Once the app is deployed, click on the tracing tab at the top of the applicaiton. Then click on the button "Start trace" a few times to generate somee traffic. You can then see the traces coming in within the Distributed Tracing app in Dynatrace. 
+* Once the app is deployed, click on the tracing tab at the top of the applicaiton. Then click on the button "Start trace" a few times to generate somee traffic. You can then see the traces coming in within the Distributed Tracing app in Dynatrace.
+
+![alt text](https://github.com/dynatrace-bobbyvogler/dt-azure-web-app-service-otel/blob/main/images/exampleApp.png)
 
 ## Outcome:
 
